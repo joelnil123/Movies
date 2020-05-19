@@ -62,7 +62,7 @@ function showRegisterNewFilmstudio() {
 
     RegistreraKnapp.addEventListener("click", function () {
 
-        
+
 
         var usernameForNewMoviestudio = document.getElementById("FilmstudioNamnId").value;
         var pwForNewMoviestudio = document.getElementById("FilmstudioPasswordId").value;
@@ -73,9 +73,9 @@ function showRegisterNewFilmstudio() {
         // };
 
 
-        addMovieStudio(usernameForNewMoviestudio,pwForNewMoviestudio);
+        addMovieStudio(usernameForNewMoviestudio, pwForNewMoviestudio);
 
-    
+
 
 
 
@@ -193,41 +193,33 @@ function showLoginPage() {
                     showErrorPage();
                 }
 
-                fetch('https://localhost:44361/api/Filmstudio', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(newMovieStudio),
-                })
-                    .then(response => response.json())
-                    .then(newMovieStudio => {
-                        console.log('Success:', newMovieStudio);
+
+                fetch("https://localhost:44361/api/filmstudio")
+                    .then(function (response) {
+                        return response.json();
                     })
-                    .catch((err) => {
-                        console.error('Error:', err);
+                    .then(function (json) {
 
+                        console.log("showMovies", json);
 
+                        
+                        
                         for (i = 0; i < json.length; i++) {
-                            if (getUser == json[i].Name && getPassword == json[i].Password) {
-                                localStorage.setItem("userId", i);
+                            
+                            console.log(subset);
+                            console.log(json);
+                            console.log(json);
 
-                            }
-                            else {
+                            if (getUser == json[i].Name && getPassword == json[i].Passowrd) {
 
                             }
                         }
-
                     });
-
-
-
-
             });
-
-
     });
+
 }
+
 
 var printMovieList = document.getElementById("movieList");
 var saveMovieButton = document.getElementById("sparaMovie");
