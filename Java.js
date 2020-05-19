@@ -1,5 +1,9 @@
 var page = document.getElementById("content");
 
+addMovieStudio("cd", "cd");
+
+addMovie("asd", 4);
+
 
 
 if (localStorage.getItem("userId") !== "null") {
@@ -21,14 +25,34 @@ function showWelcomePage() {
         .then(function (json) {
 
             print = print + json[localStorage.getItem("userId")].userName;
-            page.insertAdjacentHTML("afterbegin", print);
+            page.insertAdjacentHTML("afterbegin", print, userName);
+
+
+
 
         });
 
 
     page.insertAdjacentHTML("beforeend", "<div><button id='logoutButton'>Log out</button></div>");
+    page.insertAdjacentHTML("afterbegin", 'Moviename: <input type="text" id="movieNameId"> id: <input type="text" id="filmstudioId"> <button id="LånaFilmId">Låna film</button> ')
+
+    var lendMovieButton = document.getElementById("LånaFilmId");
+
+    lendMovieButton.addEventListener("click", function () {
+
+        // var lentMovieName = document.getElementById("movieNameId").value;
+        var lentMovieId = document.getElementById("filmstudioId").value;
 
 
+
+        fetch("https://localhost:44361/api/film")
+            .then(response => response.json())
+            .catch(error => console.log(error.message))
+            .then(json => lendMovie(json, lentMovieId));
+
+
+
+    });
     var logoutButton = document.getElementById("logoutButton");
 
     logoutButton.addEventListener("click", function () {
@@ -43,6 +67,31 @@ function showErrorPage() {
     page.insertAdjacentHTML("afterbegin", "<div>glömmt lösen?</div>");
 
 }
+
+function lendMovie(json, lentMovieId)
+{
+
+    var foo = json.find(x => x.id == lentMovieId);
+
+
+    
+    console.log(foo);
+    if (foo.id == lentMovieId) {
+        if (foo.stock == 0) 
+        {
+            console.log(foo);
+            foo.stock = foo.stockstock
+        }
+        else
+        {
+            foo.stock --;
+            console.log("finns inga filmer kompis");
+         
+        }
+   
+    }
+}
+
 
 function showRegisterNewFilmstudio() {
     page.innerHTML = "";
@@ -64,7 +113,7 @@ function showRegisterNewFilmstudio() {
 
         var usernameForNewMoviestudio = document.getElementById("FilmstudioNamnId").value;
         var pwForNewMoviestudio = document.getElementById("FilmstudioPasswordId").value;
-        console.log(usernameForNewMoviestudio,pwForNewMoviestudio);
+
         addMovieStudio(usernameForNewMoviestudio, pwForNewMoviestudio);
 
     }
@@ -153,56 +202,29 @@ function showLoginPage() {
         var getUser = document.getElementById("userInput").value;
         var getPassword = document.getElementById("userPassword").value;
 
+        fetch("https://localhost:44361/api/filmstudio")
+            .then(response => response.json())
+            .catch(error => console.log(error.message))
+            .then(json => checkForexistingUser(json, getUser, getPassword));
 
-        fetch("users.json")
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (json) {
-
-
-                for (i = 0; i < json.length; i++) {
-
-                    if (getUser == json[i].userLogin && getPassword == json[i].userPassword) {
-
-
-                        localStorage.setItem("userId", i);
-
-                    }
-                    else {
-
-                    }
-                }
-
-                if (localStorage.getItem("userId") !== null) {
-                    showWelcomePage();
-
-                }
-                else {
-                    showErrorPage();
-                }
-
-
-                fetch("https://localhost:44361/api/filmstudio")
-                    .then(function (response) {
-                        return response.json();
-                    })
-                    .then(function (json) {
-
-                        console.log("showMovies", json);
-
-                        
-                        
-                        for (i = 0; i < json.length; i++) {
-                            
-                            if (getUser == json[i].Name && getPassword == json[i].Password) {
-
-                            }
-                        }
-                    });
-            });
     });
+}
 
+function checkForexistingUser(json, getUser, getPassword) {
+    try {
+        var user = json.find(x => x.name === getUser && x.password === getPassword);
+
+        if (user != null) {
+            localStorage.userId = user.id;
+            localStorage.userName = user.name;
+
+            showWelcomePage();
+        } else {
+            showErrorPage();
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 
@@ -231,7 +253,7 @@ function showMovies() {
         });
 };
 
-addMovie("torkel", 10);
+addMovie("torkel i knipa", 10);
 
 function addMovie(Name, Stock) {
     console.log("lägg till")
