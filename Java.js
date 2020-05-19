@@ -1,5 +1,5 @@
 var page = document.getElementById("content");
-var RegistreraKnapp = document.getElementById("SaveFilmstudioId");
+
 
 
 if (localStorage.getItem("userId") !== "null") {
@@ -58,28 +58,17 @@ function showRegisterNewFilmstudio() {
     }
     )
 
-
+    var RegistreraKnapp = document.getElementById("SaveFilmstudioId");
 
     RegistreraKnapp.addEventListener("click", function () {
 
-
-
         var usernameForNewMoviestudio = document.getElementById("FilmstudioNamnId").value;
         var pwForNewMoviestudio = document.getElementById("FilmstudioPasswordId").value;
-
-        // var newMovieStudio = {
-        //     Name:  usernameForNewMoviestudio,
-        //     Password: pwForNewMoviestudio
-        // };
-
-
+        console.log(usernameForNewMoviestudio,pwForNewMoviestudio);
         addMovieStudio(usernameForNewMoviestudio, pwForNewMoviestudio);
 
-
-
-
-
-    })
+    }
+    )
 
 
 
@@ -206,11 +195,7 @@ function showLoginPage() {
                         
                         for (i = 0; i < json.length; i++) {
                             
-                            console.log(subset);
-                            console.log(json);
-                            console.log(json);
-
-                            if (getUser == json[i].Name && getPassword == json[i].Passowrd) {
+                            if (getUser == json[i].Name && getPassword == json[i].Password) {
 
                             }
                         }
