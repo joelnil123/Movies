@@ -47,6 +47,7 @@ function showWelcomePage() {
             .then(json => lendMovie(json, lentMovieId));
 
         showRentedMovies();
+        
 
 
 
@@ -79,6 +80,7 @@ function showWelcomePage() {
         var triviaMovieId = document.getElementById("movieTriviaId").value;
 
         addTriviaToMovie(triviaMovieId, triviaComment);
+        showTrivia();
         
     });
     
@@ -242,7 +244,6 @@ function showLoginPage() {
 
         showMovies();
         showRentedMovies();
-
     }
     )
 
@@ -309,10 +310,26 @@ function showRentedMovies() {
             for (i = 0; i < json.length; i++) {
                 console.log(json[i].filmId)
 
-                movieList.insertAdjacentHTML("beforeend", "<div class = rentedMovies ><p>(" + json[i].id + ")" + json[i].filmId + "</p></div></div>")
+                movieList.insertAdjacentHTML("afterend", "<div class = rentedMovies ><p>(" + json[i].id + ")" + json[i].filmId + "</p></div></div>")
             }
         });
 };
+
+function showTrivia()
+{
+    fetch("https://localhost:44361/api/filmtrivia")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (json) {
+            console.log("showTrivia", json);
+            for (i = 0; i < json.length; i++) {
+                console.log(json[i].Trivia);
+                console.log(json[i].filmId);
+                movieList.insertAdjacentHTML("afterend", "<div class = showTrivia ><p>(" + json[i].Trivia + ")" + json[i].filmId + "</p></div></div>")
+            }
+        });
+}
 
 
 function showMovies() {

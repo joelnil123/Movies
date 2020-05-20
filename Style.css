@@ -44,3 +44,10 @@ body
 {
     text-align: right;
 }
+
+.showTrivia
+{
+text-align: right;
+margin: 100;
+padding: 100;
+}
