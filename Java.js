@@ -331,8 +331,6 @@ function showMovies() {
         });
 };
 
-addMovie("torkel i knipa", 10);
-
 function addMovie(Name, Stock) {
     console.log("lägg till")
 
