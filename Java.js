@@ -2,7 +2,7 @@ var page = document.getElementById("content");
 
 addMovieStudio("cd", "cd");
 
-addMovie("asd", 4);
+
 
 
 
@@ -64,7 +64,6 @@ function showWelcomePage() {
 
 
         fetch("https://localhost:44361/api/rentedfilm")
-
             .then(response => response.json())
             .catch(error => console.log(error.message))
             .then(json => deleteReturnedMovie(returnlentMovieId));
@@ -76,47 +75,50 @@ function showWelcomePage() {
 
     triviaButton.addEventListener("click", function () {
 
-        var triviaMovieId = document.getElementById("movieTriviaId").value;
         var triviaCommentId = document.getElementById("triviaCommentId").value;
+        var triviaMovieId = document.getElementById("movieTriviaId").value;
 
         addTriviaToMovie(triviaMovieId, triviaCommentId);
-
+        
     });
-
-
-
-
+    
+    
+    
+    
     var logoutButton = document.getElementById("logoutButton");
-
+    
     logoutButton.addEventListener("click", function () {
-
+        
         localStorage.removeItem("userId");
         showLoginPage();
     });
-
+    
 }
 
-function addTriviaToMovie(triviaid, triviaComment)
+function addTriviaToMovie(MovieId, CommentId)
 {
+    console.log("addTriviaToMovie metod")
+    var data = { FilmId: MovieId, Trivia: CommentId };
 
-    var data = {filmId: triviaid , trivia : triviaComment}
-    
-    fetch('https://localhost:44361/api/filmtrivia/', {
+    console.log(data);
+
+    fetch('https://localhost:44361/api/filmtrivia', {
+
         method: 'POST',
         headers: {
-            'Content-type': 'application/json',
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({FilmId:(1), Trivia: "bra"}),
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+            console.log("gick bra", data);
         })
         .catch((error) => {
-            console.log('Error:', error);
+            console.log('error', error);
         });
     
-}
+};
 
 function showErrorPage() {
     page.insertAdjacentHTML("afterbegin", "<div>glömmt lösen?</div>");
@@ -195,16 +197,12 @@ function showRegisterNewFilmstudio() {
 
     }
     )
-
-
-
-
 }
 
 
 
-function addMovieStudio(name, password) {
-
+function addMovieStudio(name, password)
+ {
     var data = { name: name, password: password };
 
     fetch('https://localhost:44361/api/FilmStudio', {
@@ -217,8 +215,6 @@ function addMovieStudio(name, password) {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            showMovies();
-            showRentedMovies();
         })
         .catch((error) => {
             console.log('Error:', error);
@@ -230,6 +226,7 @@ function showLoginPage() {
     page.insertAdjacentHTML("afterbegin", 'användarnamn: <input type="text" id="userInput"> lösenord: <input type="password" id="userPassword"> <button id="loginButton">Login</button> ')
     page.insertAdjacentHTML("beforeend", '<button id="NyFilmstudioButtonId">Registrera ny Filmstudio</button>')
     showRentedMovies();
+    showMovies();
 
 
     page.insertAdjacentHTML("beforeend", "<div><button id ='visaFilmerId'>visa Filmer som finns inne</button>'</div>")
@@ -353,8 +350,6 @@ function addMovie(Name, Stock) {
         .then(response => response.json())
         .then(data => {
             console.log("gick bra", data);
-            showMovies();
-            showRentedMovies();
         })
         .catch((error) => {
             console.log('error', error);
