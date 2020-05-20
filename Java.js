@@ -75,15 +75,12 @@ function showWelcomePage() {
 
     triviaButton.addEventListener("click", function () {
 
-        var triviaCommentId = document.getElementById("triviaCommentId").value;
+        var triviaComment = document.getElementById("triviaCommentId").value;
         var triviaMovieId = document.getElementById("movieTriviaId").value;
 
-        addTriviaToMovie(triviaMovieId, triviaCommentId);
+        addTriviaToMovie(triviaMovieId, triviaComment);
         
     });
-    
-    
-    
     
     var logoutButton = document.getElementById("logoutButton");
     
@@ -95,12 +92,15 @@ function showWelcomePage() {
     
 }
 
-function addTriviaToMovie(MovieId, CommentId)
+function addTriviaToMovie(MovieId, Comment)
 {
-    console.log("addTriviaToMovie metod")
-    var data = { FilmId: MovieId, Trivia: CommentId };
+    console.log("addTriviaToMovie metod");
 
-    console.log(data);
+    var commentToString = Comment.toString();
+
+    var newMovieId = MovieId;
+
+    var parsedMovieId = parseInt(newMovieId);
 
     fetch('https://localhost:44361/api/filmtrivia', {
 
@@ -108,7 +108,7 @@ function addTriviaToMovie(MovieId, CommentId)
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({FilmId:(1), Trivia: "bra"}),
+        body: JSON.stringify({ FilmId : parsedMovieId , Trivia : commentToString }),
     })
         .then(response => response.json())
         .then(data => {
