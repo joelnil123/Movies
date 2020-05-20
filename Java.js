@@ -26,17 +26,13 @@ function showWelcomePage() {
 
             print = print + json[localStorage.getItem("userId")].userName;
             page.insertAdjacentHTML("afterbegin", print, userName);
-
-
-
-
         });
 
 
     page.insertAdjacentHTML("beforeend", "<div><button id='logoutButton'>Log out</button></div>");
-    page.insertAdjacentHTML("afterbegin", 'Moviename: <input type="text" id="movieNameId"> id: <input type="text" id="filmstudioId"> <button id="LånaFilmId">Låna film</button> ')
+    page.insertAdjacentHTML("afterbegin", 'Moviename: <input type="text" id="movieNameId"> id: <input type="text" id="filmstudioId"> <button id="lånaFilmId">Låna film</button> ')
 
-    var lendMovieButton = document.getElementById("LånaFilmId");
+    var lendMovieButton = document.getElementById("lånaFilmId");
 
     lendMovieButton.addEventListener("click", function () {
 
@@ -50,9 +46,46 @@ function showWelcomePage() {
             .catch(error => console.log(error.message))
             .then(json => lendMovie(json, lentMovieId));
 
+        showRentedMovies();
+
 
 
     });
+
+    page.insertAdjacentHTML("afterbegin", 'Moviename: <input type="text" id="returnedMovieNameId"> id: <input type="text" id="returnedFilmstudioId"> <button id="returnMovieId">Lämna tillbaks film</button> ')
+
+    var returnMovieButton = document.getElementById("returnMovieId");
+
+    returnMovieButton.addEventListener("click", function () {
+
+        // var lentMovieName = document.getElementById("movieNameId").value;
+        var returnlentMovieId = document.getElementById("returnedFilmstudioId").value;
+
+
+
+        fetch("https://localhost:44361/api/rentedfilm")
+
+            .then(response => response.json())
+            .catch(error => console.log(error.message))
+            .then(json => deleteReturnedMovie(returnlentMovieId));
+    });
+
+    page.insertAdjacentHTML("afterbegin", 'Comment: <input type="text" id="triviaCommentId"> film id: <input type="text" id="movieTriviaId"> <button id="triviaButtonId">skicka in trivia</button> ')
+
+    var triviaButton = document.getElementById("triviaButtonId");
+
+    triviaButton.addEventListener("click", function () {
+
+        var triviaMovieId = document.getElementById("movieTriviaId").value;
+        var triviaCommentId = document.getElementById("triviaCommentId").value;
+
+        addTriviaToMovie(triviaMovieId, triviaCommentId);
+
+    });
+
+
+
+
     var logoutButton = document.getElementById("logoutButton");
 
     logoutButton.addEventListener("click", function () {
@@ -63,33 +96,77 @@ function showWelcomePage() {
 
 }
 
+function addTriviaToMovie(triviaid, triviaComment)
+{
+
+    var data = {filmId: triviaid , trivia : triviaComment}
+    
+    fetch('https://localhost:44361/api/filmtrivia/', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
+    
+}
+
 function showErrorPage() {
     page.insertAdjacentHTML("afterbegin", "<div>glömmt lösen?</div>");
 
 }
 
-function lendMovie(json, lentMovieId)
-{
 
-    var foo = json.find(x => x.id == lentMovieId);
+function lendMovie(json, lentMovieId) {
 
+    var lentMovie = json.find(x => x.id == lentMovieId);
 
-    
-    console.log(foo);
-    if (foo.id == lentMovieId) {
-        if (foo.stock == 0) 
-        {
+    console.log(lentMovie);
+    if (lentMovie.id == lentMovieId) {
+        if (lentMovie.stock == 0) {
+
             console.log(foo);
-            foo.stock = foo.stockstock
-        }
-        else
-        {
-            foo.stock --;
+            lentMovie.stock = foo.stock
+
             console.log("finns inga filmer kompis");
-         
         }
-   
+        else {
+            lentMovie.stock--;
+
+            addLendtMovie(lentMovie.id);
+
+        }
+
     }
+}
+
+function addLendtMovie(movieId, filmStudioId) {
+    var data = { filmId: movieId, studioId: filmStudioId };
+
+    localStorage.userId = filmStudioId;
+
+    fetch('https://localhost:44361/api/rentedfilm', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
 }
 
 
@@ -140,38 +217,23 @@ function addMovieStudio(name, password) {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            printMovieList();
+            showMovies();
+            showRentedMovies();
         })
         .catch((error) => {
             console.log('Error:', error);
         });
 };
 
-
-
-// function storeNewMoviestudio() {
-
-
-
-//     localStorage.setItem('usernameForNewMoviestudio', usernameForNewMoviestudio.value);
-//     localStorage.setItem('ppwForNewMoviestudiow', pwForNewMoviestudio.value);
-
-//     var jsonPwForNewMoviestudio = json.stringify(pwForNewMoviestudio);
-
-//     var fs = require('fs');
-//     fs.writeFile('users.json', jsonPwForNewMoviestudio);
-
-
-// }
-
-
 function showLoginPage() {
     page.innerHTML = "";
     page.insertAdjacentHTML("afterbegin", 'användarnamn: <input type="text" id="userInput"> lösenord: <input type="password" id="userPassword"> <button id="loginButton">Login</button> ')
     page.insertAdjacentHTML("beforeend", '<button id="NyFilmstudioButtonId">Registrera ny Filmstudio</button>')
+    showRentedMovies();
 
 
     page.insertAdjacentHTML("beforeend", "<div><button id ='visaFilmerId'>visa Filmer som finns inne</button>'</div>")
+
 
     var visaFilm = document.getElementById("visaFilmId");
     var NyFilmstudioButton = document.getElementById("NyFilmstudioButtonId");
@@ -182,6 +244,7 @@ function showLoginPage() {
         console.log("filmer");
 
         showMovies();
+        showRentedMovies();
 
     }
     )
@@ -239,7 +302,25 @@ saveMovieButton.addEventListener("click", function () {
 
 });
 
+function showRentedMovies() {
+    fetch("https://localhost:44361/api/rentedfilm")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (json) {
+            console.log("showRentedMovies", json);
+            for (i = 0; i < json.length; i++) {
+                console.log(json[i].filmId)
+
+                movieList.insertAdjacentHTML("beforeend", "<div class = rentedMovies ><p>(" + json[i].id + ")" + json[i].filmId + "</p></div></div>")
+            }
+        });
+};
+
+
 function showMovies() {
+    var a = " antal | ";
+    var s = " film namn = ";
     fetch("https://localhost:44361/api/Film")
         .then(function (response) {
             return response.json();
@@ -248,7 +329,7 @@ function showMovies() {
             console.log("showMovies", json);
             for (i = 0; i < json.length; i++) {
                 console.log(json[i].name)
-                movieList.insertAdjacentHTML("beforeend", "<div><p>(" + json[i].id + ")" + json[i].name + "</p></div></div>")
+                movieList.insertAdjacentHTML("afterend", "<div class = showAllMovies><p>(" + json[i].id + ")" + a + json[i].stock + s + json[i].name + "</p></div></div>")
             }
         });
 };
@@ -273,6 +354,7 @@ function addMovie(Name, Stock) {
         .then(data => {
             console.log("gick bra", data);
             showMovies();
+            showRentedMovies();
         })
         .catch((error) => {
             console.log('error', error);
@@ -283,13 +365,21 @@ function deleteItem(id) {
 
     console.log("asd", id);
 
-    fetch('https://localhost:44361/api/film' + id, {
+    fetch('https://localhost:44361/api/rentedfilm' + id, {
         method: 'DELETE',
     })
         .then(response => response.json())
-        .then(response => printMovieList())
+        .then(response => showMovies())
 
 
 
+};
+
+function deleteReturnedMovie(id) {
+    fetch('https://localhost:44361/api/rentedfilm/' + id, {
+        method: 'DELETE',
+    })
+        .then(response => response.json())
+        .then(response => showRentedMovies())
 };
 

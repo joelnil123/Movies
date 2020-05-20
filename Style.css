@@ -31,3 +31,16 @@ body
     border: 2px;
     background-color: goldenrod;
 }
+
+.rentedMovies
+{
+    margin: 100;
+    padding: 100;
+    text-align: left;
+    border: 1px;
+}
+
+.showallMovies
+{
+    text-align: right;
+}
