@@ -324,9 +324,9 @@ function showTrivia()
         .then(function (json) {
             console.log("showTrivia", json);
             for (i = 0; i < json.length; i++) {
-                console.log(json[i].Trivia);
+                console.log(json[i].trivia);
                 console.log(json[i].filmId);
-                movieList.insertAdjacentHTML("afterend", "<div class = showTrivia ><p>(" + json[i].Trivia + ")" + json[i].filmId + "</p></div></div>")
+                movieList.insertAdjacentHTML("afterend", "<div class = showTrivia ><p>(" + json[i].filmId + ")" + json[i].trivia + "</p></div></div>")
             }
         });
 }
@@ -335,6 +335,8 @@ function showTrivia()
 function showMovies() {
     var a = " antal | ";
     var s = " film namn = ";
+
+    var bildPåFilm = "300bild.jpg";
     fetch("https://localhost:44361/api/Film")
         .then(function (response) {
             return response.json();
@@ -343,13 +345,13 @@ function showMovies() {
             console.log("showMovies", json);
             for (i = 0; i < json.length; i++) {
                 console.log(json[i].name)
-                movieList.insertAdjacentHTML("afterend", "<div class = showAllMovies><p>(" + json[i].id + ")" + a + json[i].stock + s + json[i].name + "</p></div></div>")
+                movieList.insertAdjacentHTML("afterend", "<div class = showAllMovies> <img src =" + bildPåFilm + "><p>(" + json[i].id + ")" + a + json[i].stock + s + json[i].name + "</p></div></div>")
             }
         });
 };
 
 function addMovie(Name, Stock) {
-    console.log("lägg till")
+    console.log("add movie metod");
 
     var data = { Name: Name, Stock: Stock };
 
