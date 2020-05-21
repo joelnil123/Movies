@@ -51,3 +51,24 @@ text-align: right;
 margin: 100;
 padding: 100;
 }
+
+.trivias
+{
+    text-align: right;
+    margin: 100;
+    padding: 100;
+}
+
+.lånadefilmer
+{
+    text-align: left;
+    margin: 100;
+    padding: 100;
+}
+
+.tillgängliga
+{
+    text-align: center;
+    margin: 100;
+    padding: 100;
+}

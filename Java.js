@@ -28,10 +28,14 @@ function showWelcomePage() {
             page.insertAdjacentHTML("afterbegin", print, userName);
         });
 
+        page.insertAdjacentHTML("afterend", "<div class = tillgängliga ><p> tillgängliga </p></div>")
 
     page.insertAdjacentHTML("beforeend", "<div><button id='logoutButton'>Log out</button></div>");
     page.insertAdjacentHTML("afterbegin", 'Moviename: <input type="text" id="movieNameId"> id: <input type="text" id="filmstudioId"> <button id="lånaFilmId">Låna film</button> ')
     page.insertAdjacentHTML("beforeend", "<div><button id='hämtaAlltId'>Hämta filmer,lånade filmer och trivia till alla filmer</button></div>");
+    page.insertAdjacentHTML("afterend", "<div class = trivias ><p>trivias</p></div>");
+    page.insertAdjacentHTML("afterend", "<div class = lånadefilmer ><p>lånade filmer</p></div>")
+    
 
     var lendMovieButton = document.getElementById("lånaFilmId");
 
@@ -253,7 +257,7 @@ function showLoginPage() {
     visaFilm.addEventListener("click", function () {
         console.log("filmer");
 
-        showMovies();
+        showMovies(json[i].Name);
         showRentedMovies();
     }
     )
@@ -318,6 +322,7 @@ function showRentedMovies() {
         })
         .then(function (json) {
             console.log("showRentedMovies", json);
+
             for (i = 0; i < json.length; i++) {
                 console.log(json[i].filmId)
 
@@ -326,7 +331,7 @@ function showRentedMovies() {
         });
 };
 
-function showTrivia()
+function showTrivia(Name)
 {
     fetch("https://localhost:44361/api/filmtrivia")
         .then(function (response) {
@@ -334,6 +339,7 @@ function showTrivia()
         })
         .then(function (json) {
             console.log("showTrivia", json);
+            
             for (i = 0; i < json.length; i++) {
                 console.log(json[i].trivia);
                 console.log(json[i].filmId);
