@@ -257,7 +257,7 @@ function showLoginPage() {
     visaFilm.addEventListener("click", function () {
         console.log("filmer");
 
-        showMovies(json[i].Name);
+        showMovies();
         showRentedMovies();
     }
     )
