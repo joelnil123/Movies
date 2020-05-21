@@ -31,6 +31,7 @@ function showWelcomePage() {
 
     page.insertAdjacentHTML("beforeend", "<div><button id='logoutButton'>Log out</button></div>");
     page.insertAdjacentHTML("afterbegin", 'Moviename: <input type="text" id="movieNameId"> id: <input type="text" id="filmstudioId"> <button id="lånaFilmId">Låna film</button> ')
+    page.insertAdjacentHTML("beforeend", "<div><button id='hämtaAlltId'>Hämta filmer,lånade filmer och trivia till alla filmer</button></div>");
 
     var lendMovieButton = document.getElementById("lånaFilmId");
 
@@ -52,6 +53,16 @@ function showWelcomePage() {
 
 
     });
+
+    var hämtaAlltButton = document.getElementById("hämtaAlltId");
+
+    hämtaAlltButton.addEventListener("click", function (){
+        console.log("hämtaknap funkar");
+        showTrivia();
+        showRentedMovies();
+        showMovies();
+
+    })
 
     page.insertAdjacentHTML("afterbegin", 'Moviename: <input type="text" id="returnedMovieNameId"> id: <input type="text" id="returnedFilmstudioId"> <button id="returnMovieId">Lämna tillbaks film</button> ')
 
@@ -373,19 +384,6 @@ function addMovie(Name, Stock) {
         });
 };
 
-function deleteItem(id) {
-
-    console.log("asd", id);
-
-    fetch('https://localhost:44361/api/rentedfilm' + id, {
-        method: 'DELETE',
-    })
-        .then(response => response.json())
-        .then(response => showMovies())
-
-
-
-};
 
 function deleteReturnedMovie(id) {
     fetch('https://localhost:44361/api/rentedfilm/' + id, {
