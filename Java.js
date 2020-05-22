@@ -2,17 +2,15 @@ var page = document.getElementById("content");
 
 addMovieStudio("cd", "cd");
 
-
-
-
-
-if (localStorage.getItem("userId") !== "null") {
+if (localStorage.UserName != null) {
     showWelcomePage();
+
 }
 else {
     showLoginPage();
 
 }
+
 
 function showWelcomePage() {
     page.innerHTML = "";
@@ -112,6 +110,7 @@ function showWelcomePage() {
 function addTriviaToMovie(MovieId, Comment)
 {
     console.log("addTriviaToMovie metod");
+    alert("trivia tillagd");
 
     var commentToString = Comment.toString();
 
@@ -144,6 +143,8 @@ function showErrorPage() {
 
 
 function lendMovie(json, lentMovieId) {
+    
+    alert("Film lånad");
 
     var lentMovie = json.find(x => x.id == lentMovieId);
 
@@ -166,7 +167,9 @@ function lendMovie(json, lentMovieId) {
     }
 }
 
-function addLendtMovie(movieId, filmStudioId) {
+function addLendtMovie(movieId, filmStudioId)
+ {
+
     var data = { filmId: movieId, studioId: filmStudioId };
 
     localStorage.userId = filmStudioId;
@@ -176,7 +179,7 @@ function addLendtMovie(movieId, filmStudioId) {
         headers: {
             'Content-type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
     })
         .then(response => response.json())
         .then(data => {
@@ -198,7 +201,7 @@ function showRegisterNewFilmstudio() {
 
     welcomePageButton.addEventListener("click", function () {
 
-        showWelcomePage();
+        showLoginPage();
 
     }
     )
@@ -209,6 +212,8 @@ function showRegisterNewFilmstudio() {
 
         var usernameForNewMoviestudio = document.getElementById("FilmstudioNamnId").value;
         var pwForNewMoviestudio = document.getElementById("FilmstudioPasswordId").value;
+
+        alert("användare registrerad");
 
         addMovieStudio(usernameForNewMoviestudio, pwForNewMoviestudio);
 
@@ -268,10 +273,7 @@ function showLoginPage() {
 
         showRegisterNewFilmstudio();
 
-    }
-    )
-
-
+    })
 
     loginButton.addEventListener("click", function () {
 
@@ -311,9 +313,34 @@ saveMovieButton.addEventListener("click", function () {
 
     MovieName = document.getElementById("movieName").value
     addMovie(MovieName, 10);
+    alert("film tillagd");
 
 
 });
+
+function addMovie(Name, Stock) {
+    console.log("add movie metod");
+
+
+    var data = { Name: Name, Stock: Stock };
+
+
+    fetch('https://localhost:44361/api/film', {
+
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log("gick bra", data);
+        })
+        .catch((error) => {
+            console.log('error', error);
+        });
+};
 
 function showRentedMovies() {
     fetch("https://localhost:44361/api/rentedfilm")
@@ -367,35 +394,16 @@ function showMovies() {
         });
 };
 
-function addMovie(Name, Stock) {
-    console.log("add movie metod");
-
-    var data = { Name: Name, Stock: Stock };
-
-
-    fetch('https://localhost:44361/api/film', {
-
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log("gick bra", data);
-        })
-        .catch((error) => {
-            console.log('error', error);
-        });
-};
-
 
 function deleteReturnedMovie(id) {
+    alert("Film tillbakalämnad");
+    
     fetch('https://localhost:44361/api/rentedfilm/' + id, {
         method: 'DELETE',
     })
         .then(response => response.json())
         .then(response => showRentedMovies())
 };
+
+
 
